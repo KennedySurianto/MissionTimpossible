@@ -2,13 +2,24 @@
 
 
 #include "ShooterCharacter.h"
+#include "Components/InputComponent.h"
+#include "Components/SphereComponent.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	NearbyNPC = nullptr; // Initialize NearbyNPC to nullptr
 
+	// Create a sphere component for detecting overlap with NPCs
+    InteractionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("InteractionSphere"));
+    InteractionSphere->InitSphereRadius(200.0f); // Adjust radius as needed
+    InteractionSphere->SetupAttachment(RootComponent);
+
+    // Bind overlap events
+    InteractionSphere->OnComponentBeginOverlap.AddDynamic(this, &AShooterCharacter::OnOverlapBegin);
+    InteractionSphere->OnComponentEndOverlap.AddDynamic(this, &AShooterCharacter::OnOverlapEnd);
 }
 
 // Called when the game starts or when spawned
@@ -37,6 +48,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	// ^ Arguments: binding in UE, target, function (pointer)
 	// Lookup, LookRight, Jump lgsg pake parent function karena argsnya gadiapa"in lg
+
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AShooterCharacter::Interact);
 }
 
 void AShooterCharacter::MoveForward(float AxisValue)
@@ -49,3 +62,31 @@ void AShooterCharacter::MoveRight(float AxisValue)
 	AddMovementInput(GetActorRightVector() * AxisValue);
 }
 
+void AShooterCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
+									class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, 
+									bool bFromSweep, const FHitResult & SweepResult)
+{
+    // Check if overlapping actor is an NPCCharacter
+    ANPCCharacter* OverlappedNPC = Cast<ANPCCharacter>(OtherActor);
+    if (OverlappedNPC)
+    {
+        NearbyNPC = OverlappedNPC; // Store reference to the NPC
+    }
+}
+
+void AShooterCharacter::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
+                                    class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+    if (OtherActor == NearbyNPC)
+    {
+        NearbyNPC = nullptr; // Clear reference when leaving the NPC’s range
+    }
+}
+
+void AShooterCharacter::Interact()
+{
+    if (NearbyNPC)
+    {
+        NearbyNPC->SayHello(); // Call SayHello on the NPC
+    }
+}

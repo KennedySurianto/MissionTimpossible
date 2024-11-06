@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "NPCCharacter.h" // Include NPCCharacter class
 #include "ShooterCharacter.generated.h"
 
 UCLASS()
@@ -29,4 +30,28 @@ public:
 private:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
+
+	// Reference to the NPC for interaction
+    ANPCCharacter* NearbyNPC;
+
+    // Function to interact with the NPC
+    void Interact();
+
+    // Function to detect when the player is near an NPC
+    UFUNCTION()
+    void OnOverlapBegin(
+		class UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
+        class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, 
+		const FHitResult & SweepResult
+	);
+
+    UFUNCTION()
+    void OnOverlapEnd(
+		class UPrimitiveComponent* OverlappedComp, 
+		AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex
+	);
+
+	// Sphere component for detecting overlap with NPCs
+    UPROPERTY(VisibleAnywhere)
+    class USphereComponent* InteractionSphere;
 };
