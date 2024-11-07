@@ -7,7 +7,8 @@
 // Sets default values
 ANPCCharacter::ANPCCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame. 
+	// Dimatiin karena gabutuh
 	PrimaryActorTick.bCanEverTick = false;
 
 }

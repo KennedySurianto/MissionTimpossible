@@ -14,12 +14,12 @@ AShooterCharacter::AShooterCharacter()
     // NPC Logics
     NearbyNPC = nullptr;
 
-	    // Create a sphere component for detecting overlap with NPCs
+    // Create a sphere component for detecting overlap with NPCs
     InteractionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("InteractionSphere"));
     InteractionSphere->InitSphereRadius(200.0f);
     InteractionSphere->SetupAttachment(RootComponent);
 
-        // Bind overlap events
+    // Bind overlap events
     InteractionSphere->OnComponentBeginOverlap.AddDynamic(this, &AShooterCharacter::OnOverlapBegin);
     InteractionSphere->OnComponentEndOverlap.AddDynamic(this, &AShooterCharacter::OnOverlapEnd);
 }
