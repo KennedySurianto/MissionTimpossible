@@ -4,20 +4,22 @@
 #include "ShooterCharacter.h"
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
+#include "Gun.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	NearbyNPC = nullptr; // Initialize NearbyNPC to nullptr
+	
+    // NPC Logics
+    NearbyNPC = nullptr;
 
-	// Create a sphere component for detecting overlap with NPCs
+	    // Create a sphere component for detecting overlap with NPCs
     InteractionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("InteractionSphere"));
-    InteractionSphere->InitSphereRadius(200.0f); // Adjust radius as needed
+    InteractionSphere->InitSphereRadius(200.0f);
     InteractionSphere->SetupAttachment(RootComponent);
 
-    // Bind overlap events
+        // Bind overlap events
     InteractionSphere->OnComponentBeginOverlap.AddDynamic(this, &AShooterCharacter::OnOverlapBegin);
     InteractionSphere->OnComponentEndOverlap.AddDynamic(this, &AShooterCharacter::OnOverlapEnd);
 }
@@ -27,6 +29,12 @@ void AShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+    Gun = GetWorld()->SpawnActor<AGun>(GunClass);
+
+    // Hide the default gun in hand (the bone name is 'weapon_r')
+    GetMesh()->HideBoneByName(TEXT("weapon_r"), EPhysBodyOp::PBO_None);
+    Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+    Gun->SetOwner(this);
 }
 
 // Called every frame
@@ -41,6 +49,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+    // Basic movement
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AShooterCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AShooterCharacter::MoveRight);
@@ -49,7 +58,9 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	// ^ Arguments: binding in UE, target, function (pointer)
 	// Lookup, LookRight, Jump lgsg pake parent function karena argsnya gadiapa"in lg
 
-	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AShooterCharacter::Interact);
+    // Actions
+	PlayerInputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Interact);
+    PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Shoot);
 }
 
 void AShooterCharacter::MoveForward(float AxisValue)
@@ -60,6 +71,11 @@ void AShooterCharacter::MoveForward(float AxisValue)
 void AShooterCharacter::MoveRight(float AxisValue)
 {
 	AddMovementInput(GetActorRightVector() * AxisValue);
+}
+
+void AShooterCharacter::Shoot()
+{
+    Gun->PullTrigger();
 }
 
 void AShooterCharacter::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 

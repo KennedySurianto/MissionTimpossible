@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "NPCCharacter.h" // Include NPCCharacter class
+#include "NPCCharacter.h"
 #include "ShooterCharacter.generated.h"
+
+class AGun;
 
 UCLASS()
 class MISSIONTIMPOSSIBLE_API AShooterCharacter : public ACharacter
@@ -30,6 +32,7 @@ public:
 private:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
+	void Shoot();
 
 	// Reference to the NPC for interaction
     ANPCCharacter* NearbyNPC;
@@ -54,4 +57,10 @@ private:
 	// Sphere component for detecting overlap with NPCs
     UPROPERTY(VisibleAnywhere)
     class USphereComponent* InteractionSphere;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AGun> GunClass;
+
+	UPROPERTY()
+	AGun* Gun;
 };
