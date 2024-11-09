@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Gun.h"
 #include "Components/CapsuleComponent.h"
+#include "MissionTimpossibleGameModeBase.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -76,6 +77,11 @@ float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const &Dama
     {
         DetachFromControllerPendingDestroy();
         GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        AMissionTimpossibleGameModeBase* GameMode = Cast<AMissionTimpossibleGameModeBase>(GetWorld()->GetAuthGameMode());
+        if (GameMode != nullptr)
+        {
+            GameMode->PawnKilled(this);
+        }
     }
 
     return DamageToApply;
