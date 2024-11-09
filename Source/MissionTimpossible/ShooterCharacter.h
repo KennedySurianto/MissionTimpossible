@@ -31,13 +31,14 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser);
 
+	void Shoot();
+	
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
 
 private:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
-	void Shoot();
     void Interact(); // Function to interact with the NPC
 
 	ANPCCharacter* NearbyNPC; // Reference to the NPC for interaction

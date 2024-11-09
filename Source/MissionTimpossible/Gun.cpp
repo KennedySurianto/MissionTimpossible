@@ -40,9 +40,13 @@ void AGun::PullTrigger()
 	// Camera Debug
 	// DrawDebugCamera(GetWorld(), Location, Rotation, 90, 2, FColor::Red, true);
 
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(GetOwner());
+
 	FVector End = Location + Rotation.Vector() * MaxRange;
 	FHitResult Hit;
-	bool bSuccess = GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1);
+	bool bSuccess = GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1, Params);
 
 	// Line Debug at bullet direction
 	// DrawDebugLine(GetWorld(), Location, End, FColor::Green, false, 1, 0, 1);
