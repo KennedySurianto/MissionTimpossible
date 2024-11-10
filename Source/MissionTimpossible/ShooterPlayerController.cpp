@@ -3,7 +3,6 @@
 
 #include "ShooterPlayerController.h"
 
-#include "TimerManager.h"
 #include "Blueprint/UserWidget.h"
 
 void AShooterPlayerController::GameHasEnded(AActor *EndGameFocus, bool bIsWinner)
@@ -17,5 +16,4 @@ void AShooterPlayerController::GameHasEnded(AActor *EndGameFocus, bool bIsWinner
     }
 
     UE_LOG(LogTemp, Display, TEXT("Game has ended"));
-    GetWorldTimerManager().SetTimer(RestartTimer, this, &APlayerController::RestartLevel, RestartDelay);
 }
