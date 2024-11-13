@@ -5,14 +5,35 @@
 
 #include "Blueprint/UserWidget.h"
 
+void AShooterPlayerController::BeginPlay()
+{
+    HUD = CreateWidget(this, HUDClass);
+    if (HUD != nullptr)
+    {
+        HUD->AddToViewport();
+    }
+}
+
 void AShooterPlayerController::GameHasEnded(AActor *EndGameFocus, bool bIsWinner)
 {
     Super::GameHasEnded(EndGameFocus, bIsWinner);
 
-    UUserWidget* LoseScreen = CreateWidget(this, LoseScreenClass);
-    if (LoseScreen != nullptr)
+    HUD->RemoveFromViewport();
+    if (bIsWinner)
     {
-        LoseScreen->AddToViewport();
+        UUserWidget* WinScreen = CreateWidget(this, WinScreenClass);
+        if (WinScreen != nullptr)
+        {
+            WinScreen->AddToViewport();
+        }
+    }
+    else
+    {
+        UUserWidget* LoseScreen = CreateWidget(this, LoseScreenClass);
+        if (LoseScreen != nullptr)
+        {
+            LoseScreen->AddToViewport();
+        }
     }
 
     UE_LOG(LogTemp, Display, TEXT("Game has ended"));
