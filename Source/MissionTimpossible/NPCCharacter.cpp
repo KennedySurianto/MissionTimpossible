@@ -1,46 +1,41 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "NPCCharacter.h"
-#include "Engine/Engine.h"
+#include "ShooterCharacter.h" // For character reference
+#include "ShooterPlayerController.h" // For PlayerController reference
 
-// Sets default values
+// Constructor
 ANPCCharacter::ANPCCharacter()
 {
-	// Set this character to call Tick() every frame. 
-	// Dimatiin karena gabutuh
-	PrimaryActorTick.bCanEverTick = false;
+    // Set default values for NPC properties
+    PrimaryActorTick.bCanEverTick = true;
 
+    // You could set custom values for the NPC here
+    DialogueMessage = TEXT("Hello, brave adventurer! How can I assist you?");
 }
 
-// Called when the game starts or when spawned
+// BeginPlay function (you can add specific initialization logic for the NPC here)
 void ANPCCharacter::BeginPlay()
 {
-	Super::BeginPlay();
-	
+    Super::BeginPlay();
 }
 
-// Called every frame
+// Tick function (if you need NPC-specific ticking behavior, such as animations or movement)
 void ANPCCharacter::Tick(float DeltaTime)
 {
-	Super::Tick(DeltaTime);
-
+    Super::Tick(DeltaTime);
 }
 
-// Called to bind functionality to input
-void ANPCCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+// Override the Interact function to define NPC interaction (e.g., displaying a dialogue)
+void ANPCCharacter::Interact()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+    // Call base class interaction (if you want to keep common functionality)
+    Super::Interact();
 
-}
-
-void ANPCCharacter::SayHello()
-{
-    // Print "Hello" to the screen
-    if (GEngine)
+    // Logic for NPC-specific interaction, e.g., displaying a message
+    if (DialogueMessage.Len() > 0)
     {
-		FString Message = NPCName + TEXT(": Hello!");
-        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, Message);
+        // Display dialogue or do something else
+        UE_LOG(LogTemp, Log, TEXT("NPC says: %s"), *DialogueMessage);
+
+        // You can add more complex interaction logic, like showing a UI for dialogue here
     }
 }
-

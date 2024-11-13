@@ -14,16 +14,7 @@ AShooterCharacter::AShooterCharacter()
     PrimaryActorTick.bCanEverTick = true;
 
     // NPC Logics
-    NearbyNPC = nullptr;
-
-    // Create a sphere component for detecting overlap with NPCs
-    InteractionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("InteractionSphere"));
-    InteractionSphere->InitSphereRadius(200.0f);
-    InteractionSphere->SetupAttachment(RootComponent);
-
-    // Bind overlap events
-    InteractionSphere->OnComponentBeginOverlap.AddDynamic(this, &AShooterCharacter::OnOverlapBegin);
-    InteractionSphere->OnComponentEndOverlap.AddDynamic(this, &AShooterCharacter::OnOverlapEnd);
+    NearbyInteractable = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -107,31 +98,12 @@ void AShooterCharacter::Shoot()
     Gun->PullTrigger();
 }
 
-void AShooterCharacter::OnOverlapBegin(class UPrimitiveComponent *OverlappedComp, AActor *OtherActor,
-                                       class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex,
-                                       bool bFromSweep, const FHitResult &SweepResult)
-{
-    // Check if overlapping actor is an NPCCharacter
-    ANPCCharacter *OverlappedNPC = Cast<ANPCCharacter>(OtherActor);
-    if (OverlappedNPC)
-    {
-        NearbyNPC = OverlappedNPC; // Store reference to the NPC
-    }
-}
-
-void AShooterCharacter::OnOverlapEnd(class UPrimitiveComponent *OverlappedComp, AActor *OtherActor,
-                                     class UPrimitiveComponent *OtherComp, int32 OtherBodyIndex)
-{
-    if (OtherActor == NearbyNPC)
-    {
-        NearbyNPC = nullptr; // Clear reference when leaving the NPC’s range
-    }
-}
-
 void AShooterCharacter::Interact()
 {
-    if (NearbyNPC)
+    // Implement interact logic for main character here
+    if (NearbyInteractable)
     {
-        NearbyNPC->SayHello(); // Call SayHello on the NPC
+        //ANPCCharacter* NPCCharacter = Cast<ANPCCharacter>(NearbyInteractable);
+        NearbyInteractable->Interact();
     }
 }

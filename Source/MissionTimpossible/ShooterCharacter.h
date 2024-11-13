@@ -36,30 +36,14 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
 
+	UPROPERTY(VisibleAnywhere)
+	AInteractableBase* NearbyInteractable;
+
 private:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
-    void Interact(); // Function to interact with the NPC
+    void Interact(); // Function to interact with the interactables
 
-	ANPCCharacter* NearbyNPC; // Reference to the NPC for interaction
-
-    // Function to detect when the player is near an NPC
-    UFUNCTION()
-    void OnOverlapBegin(
-		class UPrimitiveComponent* OverlappedComp, AActor* OtherActor, 
-        class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, 
-		const FHitResult & SweepResult
-	);
-
-    UFUNCTION()
-    void OnOverlapEnd(
-		class UPrimitiveComponent* OverlappedComp, 
-		AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex
-	);
-
-	// Sphere component for detecting overlap with NPCs
-    UPROPERTY(VisibleAnywhere)
-    class USphereComponent* InteractionSphere;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGun> GunClass;
