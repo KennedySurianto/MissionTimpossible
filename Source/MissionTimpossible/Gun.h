@@ -25,6 +25,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void Reload();
+
+	FText GetAmmoText() const;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* Root;
@@ -53,4 +57,23 @@ private:
 	bool GunTrace(FHitResult& Hit, FVector& ShotDirection);
 
 	AController* GetOwnerController() const;
+
+	// Reload Properties
+	UPROPERTY(EditAnywhere)
+	int32 MaxClipAmmo = 30;
+
+	UPROPERTY(VisibleAnywhere)
+	int32 CurrentClipAmmo;
+
+	UPROPERTY(EditAnywhere)
+	int32 ReserveAmmo = 300;
+
+	UPROPERTY(EditAnywhere)
+	float ReloadTime = 2.0f;
+
+	bool bIsReloading;
+
+	FTimerHandle ReloadTimerHandle;
+
+	void FinishReloading();
 };

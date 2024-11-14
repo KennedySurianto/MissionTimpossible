@@ -39,14 +39,17 @@ public:
 	UFUNCTION(BlueprintPure)
 	float GetHealthPercent() const;
 
+	UFUNCTION(BlueprintPure)
+	FText GetAmmoText() const;
+
 	UPROPERTY(VisibleAnywhere)
 	AInteractableBase* NearbyInteractable;
 
 private:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
-    void Interact(); // Function to interact with the interactables
-
+    void Interact();
+	void Reload();
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGun> GunClass;

@@ -54,6 +54,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent *PlayerInputCo
     // Actions
     PlayerInputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Interact);
     PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Shoot);
+    PlayerInputComponent->BindAction(TEXT("Reload"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Reload);
 }
 
 float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
@@ -88,6 +89,11 @@ float AShooterCharacter::GetHealthPercent() const
     return Health / MaxHealth;
 }
 
+FText AShooterCharacter::GetAmmoText() const
+{
+    return Gun->GetAmmoText();
+}
+
 void AShooterCharacter::MoveForward(float AxisValue)
 {
     AddMovementInput(GetActorForwardVector() * AxisValue);
@@ -111,4 +117,9 @@ void AShooterCharacter::Interact()
         //ANPCCharacter* NPCCharacter = Cast<ANPCCharacter>(NearbyInteractable);
         NearbyInteractable->Interact();
     }
+}
+
+void AShooterCharacter::Reload()
+{
+    Gun->Reload();
 }

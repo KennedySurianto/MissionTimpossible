@@ -18,10 +18,31 @@ AGun::AGun()
 
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(Root);
+
+	// Initialize ammo values
+	CurrentClipAmmo = MaxClipAmmo;
+	bIsReloading = false;
 }
 
 void AGun::PullTrigger()
 {
+	// Check if reloading or out of ammo
+	if (bIsReloading)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Reloading..."));
+		return;
+	}
+
+	if (CurrentClipAmmo <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Out of ammo in clip! Reload needed."));
+		// Optionally, play a "dry fire" sound or trigger reload here
+		return;
+	}
+
+	// Fire the gun (reduce clip ammo)
+	CurrentClipAmmo--;
+
 	// Muzzle flash
 	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, TEXT("MuzzleFlashSocket"));
 	UGameplayStatics::SpawnSoundAttached(MuzzleSound, Mesh, TEXT("MuzzleFlashSocket"));
@@ -90,4 +111,46 @@ AController* AGun::GetOwnerController() const
 		return nullptr;
 	
 	return OwnerPawn->GetController();
+}
+
+void AGun::Reload()
+{
+	// Check if already reloading or full clip ammo
+	if (bIsReloading || CurrentClipAmmo == MaxClipAmmo || ReserveAmmo <= 0)
+	{
+		return;
+	}
+
+	bIsReloading = true;
+	UE_LOG(LogTemp, Warning, TEXT("Reloading..."));
+
+	// Set timer for reload process
+	GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, this, &AGun::FinishReloading, ReloadTime, false);
+}
+
+FText AGun::GetAmmoText() const
+{
+	return FText::FromString(FString::Printf(TEXT("%d/%d"), CurrentClipAmmo, ReserveAmmo));
+}
+
+void AGun::FinishReloading()
+{
+	bIsReloading = false;
+
+	// Calculate ammo needed to refill the clip
+	int32 AmmoNeeded = MaxClipAmmo - CurrentClipAmmo;
+
+	// Refill the clip with available reserve ammo
+	if (ReserveAmmo >= AmmoNeeded)
+	{
+		CurrentClipAmmo = MaxClipAmmo;
+		ReserveAmmo -= AmmoNeeded;
+	}
+	else
+	{
+		CurrentClipAmmo += ReserveAmmo;
+		ReserveAmmo = 0;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Reload complete. Clip: %d/%d, Reserve: %d"), CurrentClipAmmo, MaxClipAmmo, ReserveAmmo);
 }
