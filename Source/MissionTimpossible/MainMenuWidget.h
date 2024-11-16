@@ -40,4 +40,7 @@ protected:
 private:
 	void OpenLevel(FString LevelString);
 	void ResetCursor();
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> SettingsMenuClass;
 };

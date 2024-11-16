@@ -4,6 +4,7 @@
 #include "MainMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/Button.h"
+#include "Blueprint/UserWidget.h"
 
 void UMainMenuWidget::OpenLevel(FString LevelString)
 {
@@ -19,6 +20,12 @@ void UMainMenuWidget::PlayGame()
 
 void UMainMenuWidget::Settings()
 {
+    UUserWidget* SettingsMenu = CreateWidget(this, SettingsMenuClass);
+    if (SettingsMenu != nullptr)
+    {
+        RemoveFromParent();
+        SettingsMenu->AddToViewport();
+    }
 }
 
 void UMainMenuWidget::QuitGame()
