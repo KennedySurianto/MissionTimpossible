@@ -7,6 +7,7 @@
 #include "Gun.h"
 #include "Components/CapsuleComponent.h"
 #include "MissionTimpossibleGameModeBase.h"
+#include "Blueprint/UserWidget.h"
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -55,6 +56,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent *PlayerInputCo
     PlayerInputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Interact);
     PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Shoot);
     PlayerInputComponent->BindAction(TEXT("Reload"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Reload);
+    PlayerInputComponent->BindAction(TEXT("Pause"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Pause);
 }
 
 float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const &DamageEvent, AController *EventInstigator, AActor *DamageCauser)
@@ -122,4 +124,13 @@ void AShooterCharacter::Interact()
 void AShooterCharacter::Reload()
 {
     Gun->Reload();
+}
+
+void AShooterCharacter::Pause()
+{
+    UUserWidget* PauseMenu = CreateWidget<UUserWidget>(GetWorld(), PauseMenuClass);
+    if (PauseMenu)
+    {
+        PauseMenu->AddToViewport();
+    }
 }

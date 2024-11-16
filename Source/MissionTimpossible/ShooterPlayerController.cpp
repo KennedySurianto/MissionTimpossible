@@ -14,6 +14,24 @@ void AShooterPlayerController::BeginPlay()
     }
 }
 
+
+void AShooterPlayerController::PauseGame()
+{
+    this->SetPause(true);
+    this->bShowMouseCursor = true;
+    FInputModeUIOnly InputMode;
+    InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+    this->SetInputMode(InputMode);
+}
+
+void AShooterPlayerController::UnpauseGame()
+{
+    this->SetPause(false);
+    this->bShowMouseCursor = false;
+    FInputModeGameOnly InputMode;
+    this->SetInputMode(InputMode);
+}
+
 void AShooterPlayerController::GameHasEnded(AActor *EndGameFocus, bool bIsWinner)
 {
     Super::GameHasEnded(EndGameFocus, bIsWinner);

@@ -50,6 +50,7 @@ private:
 	void MoveRight(float AxisValue);
     void Interact();
 	void Reload();
+	void Pause();
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGun> GunClass;
@@ -62,4 +63,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	float Health;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> PauseMenuClass;
 };

@@ -21,6 +21,12 @@ protected:
 public:
 	virtual void GameHasEnded(class AActor* EndGameFocus = nullptr, bool bIsWinner = false) override;
 
+	UFUNCTION()
+	void PauseGame();
+
+	UFUNCTION()
+	void UnpauseGame();
+
 private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget> LoseScreenClass;

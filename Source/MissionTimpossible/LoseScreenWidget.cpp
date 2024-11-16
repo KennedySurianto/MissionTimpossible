@@ -1,6 +1,7 @@
 #include "LoseScreenWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/Button.h"
+#include "ShooterPlayerController.h"
 
 void ULoseScreenWidget::OpenShootingRange()
 {
@@ -25,16 +26,10 @@ void ULoseScreenWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-    APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-    if (PlayerController)
+    AShooterPlayerController* ShooterPlayerController = Cast<AShooterPlayerController>(GetWorld()->GetFirstPlayerController());
+    if (ShooterPlayerController)
     {
-        // Show the mouse cursor
-        PlayerController->bShowMouseCursor = true;
-
-        // Set input mode to UI only, so player can interact with the widget
-        FInputModeUIOnly InputMode;
-        InputMode.SetWidgetToFocus(this->TakeWidget());
-        PlayerController->SetInputMode(InputMode);
+        ShooterPlayerController->PauseGame();
     }
 
     // Bind BackToShootingRangeButton to OpenShootingRange function
@@ -52,11 +47,9 @@ void ULoseScreenWidget::NativeConstruct()
 
 void ULoseScreenWidget::ResetCursor()
 {
-    APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-    if (PlayerController)
+    AShooterPlayerController* ShooterPlayerController = Cast<AShooterPlayerController>(GetWorld()->GetFirstPlayerController());
+    if (ShooterPlayerController)
     {
-        PlayerController->bShowMouseCursor = false;
-        FInputModeGameOnly InputMode;
-        PlayerController->SetInputMode(InputMode);
+        ShooterPlayerController->UnpauseGame();
     }
 }
