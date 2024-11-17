@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h" // For USphereComponent
 #include "Blueprint/UserWidget.h" // For UUserWidget
+#include "InteractWidget.h"
 #include "InteractableBase.generated.h"
 
 UCLASS()
@@ -33,11 +34,11 @@ private:
 
     // UI widget class to display when the player is near
     UPROPERTY(EditAnywhere, Category = "UI")
-    TSubclassOf<UUserWidget> MessageWidgetClass;
+    TSubclassOf<UUserWidget> InteractWidgetClass;
 
     // The widget instance
     UPROPERTY()
-    UUserWidget* MessageWidget;
+    UUserWidget* InteractWidget;
 
     // Trigger events when the player overlaps the proximity sphere
     UFUNCTION()

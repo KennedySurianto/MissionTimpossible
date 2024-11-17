@@ -26,7 +26,7 @@ public:
 
 	// Function to handle overlap events
 	UFUNCTION()
-		void OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor);
+	void OnOverlapBegin(class AActor* OverlappedActor, class AActor* OtherActor);
 
 	// Name of the level to teleport to
 	UPROPERTY(EditAnywhere, Category="Teleporter")

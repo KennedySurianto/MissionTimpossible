@@ -4,6 +4,7 @@
 #include "GameFramework/PlayerController.h" // For Player Controller
 #include "ShooterCharacter.h"  // For interacting with the player character
 #include "ShooterPlayerController.h" // For custom player controller if needed
+#include "InteractWidget.h"
 
 // Constructor
 AInteractableBase::AInteractableBase()
@@ -36,12 +37,12 @@ void AInteractableBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
     UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
     bool bFromSweep, const FHitResult& SweepResult)
 {
-    UE_LOG(LogTemp, Display, TEXT("Player overlapped."))
+    UE_LOG(LogTemp, Display, TEXT("Player overlapped."));
 
     // Check if the overlapping actor is a valid character (ShooterCharacter)
     AShooterCharacter* ShooterCharacter = Cast<AShooterCharacter>(OtherActor);
 
-    if (ShooterCharacter && MessageWidgetClass)
+    if (ShooterCharacter && InteractWidgetClass)
     {
         ShooterCharacter->NearbyInteractable = this;
 
@@ -49,14 +50,24 @@ void AInteractableBase::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
         APlayerController* PlayerController = Cast<APlayerController>(ShooterCharacter->GetController());
         AShooterPlayerController* ShooterPlayerController = Cast<AShooterPlayerController>(PlayerController);
 
-        // Check if we successfully cast to ShooterPlayerController and if MessageWidget isn't already created
-        if (ShooterPlayerController && !MessageWidget)
+        // Check if we successfully cast to ShooterPlayerController and if InteractWidget isn't already created
+        if (ShooterPlayerController && !InteractWidget)
         {
             // Create and display the widget
-            MessageWidget = CreateWidget<UUserWidget>(ShooterPlayerController, MessageWidgetClass);
-            if (MessageWidget)
+            InteractWidget = CreateWidget<UUserWidget>(ShooterPlayerController, InteractWidgetClass);
+            if (InteractWidget)
             {
-                MessageWidget->AddToViewport();  // Add widget to the player's viewport
+                UInteractWidget* SpecificInteractWidget = Cast<UInteractWidget>(InteractWidget);
+
+                if (SpecificInteractWidget)
+                {
+                    SpecificInteractWidget->SetWidgetText("Press [E] to Interact");
+                    InteractWidget->AddToViewport();
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("Failed to cast widget to UInteractWidget."));
+                }
             }
         }
     }
@@ -73,11 +84,11 @@ void AInteractableBase::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, A
     // Check if the actor leaving is the ShooterCharacter
     AShooterCharacter* ShooterCharacter = Cast<AShooterCharacter>(OtherActor);
 
-    if (ShooterCharacter && MessageWidget)
+    if (ShooterCharacter && InteractWidget)
     {
         // Remove the message widget when the character leaves the proximity
-        MessageWidget->RemoveFromViewport();
-        MessageWidget = nullptr;
+        InteractWidget->RemoveFromViewport();
+        InteractWidget = nullptr;
     }
 }
 

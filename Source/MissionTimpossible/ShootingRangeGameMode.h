@@ -21,6 +21,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	virtual void BeginPlay() override;
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Teleporter")
 	TSoftObjectPtr<ALevelTeleporter> LevelTeleporterActor;
@@ -31,4 +34,11 @@ private:
 
 	bool IsQuestFinished();
 
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> InteractWidgetClass;
+
+	// Timer handle to manage widget removal
+	FTimerHandle TimerHandle;
+
+	void ShowWidgetMessage(FString Text, float Duration);
 };
