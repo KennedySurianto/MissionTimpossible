@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MissionTimpossibleGameModeBase.h"
+#include "LevelTeleporter.h"
 #include "KillEmAllGameMode.generated.h"
 
 /**
@@ -16,6 +17,9 @@ class MISSIONTIMPOSSIBLE_API AKillEmAllGameMode : public AMissionTimpossibleGame
 
 public:
 	virtual void PawnKilled(APawn* PawnKilled) override;
+
+protected:
+	virtual void BeginPlay() override;
 
 private:
 	void EndGame(bool bIsPlayerWinner);

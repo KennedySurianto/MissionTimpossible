@@ -109,6 +109,7 @@ void AShooterCharacter::MoveRight(float AxisValue)
 void AShooterCharacter::Shoot()
 {
     Gun->PullTrigger();
+    BulletsShot++;
 }
 
 void AShooterCharacter::Interact()

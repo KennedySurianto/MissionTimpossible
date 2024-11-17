@@ -6,6 +6,9 @@
 #include "EngineUtils.h"
 #include "GameFramework/Controller.h"
 #include "ShooterAIController.h"
+#include "Kismet/GameplayStatics.h"
+#include "ShooterPlayerController.h"
+#include "ShooterCharacter.h"
 
 void AKillEmAllGameMode::PawnKilled(APawn *PawnKilled)
 {
@@ -28,6 +31,11 @@ void AKillEmAllGameMode::PawnKilled(APawn *PawnKilled)
     EndGame(true);
 }
 
+void AKillEmAllGameMode::BeginPlay()
+{
+    Super::BeginPlay();
+}
+
 void AKillEmAllGameMode::EndGame(bool bIsPlayerWinner)
 {
     for (AController* Controller : TActorRange<AController>(GetWorld()))
@@ -36,3 +44,4 @@ void AKillEmAllGameMode::EndGame(bool bIsPlayerWinner)
         Controller->GameHasEnded(Controller->GetPawn(), bIsWinner);
     }
 }
+

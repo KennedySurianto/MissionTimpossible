@@ -28,4 +28,7 @@ private:
     // Add any NPC-specific properties here (e.g., a dialog message)
     UPROPERTY(EditAnywhere, Category = "NPC")
     FString DialogueMessage;
+
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class UUserWidget> QuestWidgetClass;
 };

@@ -31,4 +31,11 @@ public:
 	// Name of the level to teleport to
 	UPROPERTY(EditAnywhere, Category="Teleporter")
 	FName LevelName;
+
+	UFUNCTION(BlueprintCallable)
+	void EnableTeleporter();
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	bool bIsEnabled;
 };

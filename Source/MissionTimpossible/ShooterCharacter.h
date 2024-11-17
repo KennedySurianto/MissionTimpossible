@@ -45,6 +45,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	AInteractableBase* NearbyInteractable;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
+	int32 BulletsShot;
+
 private:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);

@@ -27,15 +27,15 @@ void ANPCCharacter::Tick(float DeltaTime)
 // Override the Interact function to define NPC interaction (e.g., displaying a dialogue)
 void ANPCCharacter::Interact()
 {
-    // Call base class interaction (if you want to keep common functionality)
     Super::Interact();
 
-    // Logic for NPC-specific interaction, e.g., displaying a message
-    if (DialogueMessage.Len() > 0)
+    if (QuestWidgetClass)
     {
-        // Display dialogue or do something else
-        UE_LOG(LogTemp, Log, TEXT("NPC says: %s"), *DialogueMessage);
+        UUserWidget* WidgetInstance = CreateWidget<UUserWidget>(GetWorld(), QuestWidgetClass);
 
-        // You can add more complex interaction logic, like showing a UI for dialogue here
+        if (WidgetInstance)
+        {
+            WidgetInstance->AddToViewport();
+        }
     }
 }

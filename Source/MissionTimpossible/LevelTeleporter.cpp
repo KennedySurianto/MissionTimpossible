@@ -9,6 +9,8 @@ ALevelTeleporter::ALevelTeleporter()
 {
     // Bind the overlap event
     OnActorBeginOverlap.AddDynamic(this, &ALevelTeleporter::OnOverlapBegin);
+
+    bIsEnabled = false; // Initially disabled
 }
 
 void ALevelTeleporter::BeginPlay()
@@ -18,6 +20,9 @@ void ALevelTeleporter::BeginPlay()
 
 void ALevelTeleporter::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
+    if (!bIsEnabled)
+        return;
+    
     // Check if the overlapping actor is the player
     if (OtherActor && OtherActor->IsA(ACharacter::StaticClass()))
     {
@@ -32,4 +37,9 @@ void ALevelTeleporter::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActo
             }
         }
     }
+}
+
+void ALevelTeleporter::EnableTeleporter()
+{
+    bIsEnabled = true;
 }
