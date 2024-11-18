@@ -24,4 +24,6 @@ protected:
 private:
 	void EndGame(bool bIsPlayerWinner);
 
+	UPROPERTY(EditAnywhere, Category = "Teleporter")
+	TSoftObjectPtr<ALevelTeleporter> LevelTeleporterActor;
 };

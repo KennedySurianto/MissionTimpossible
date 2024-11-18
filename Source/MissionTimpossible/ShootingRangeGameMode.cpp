@@ -40,6 +40,7 @@ void AShootingRangeGameMode::EnableTeleporterIfConditionMet()
             ShowWidgetMessage("All quests are done! Now go to the teleporter.", 5);
 
             PrimaryActorTick.bCanEverTick = false; // ini still looping, nanti fix
+            SetActorTickEnabled(false);
         }
     }
 }

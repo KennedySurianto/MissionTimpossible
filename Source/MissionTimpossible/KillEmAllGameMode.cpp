@@ -41,6 +41,10 @@ void AKillEmAllGameMode::EndGame(bool bIsPlayerWinner)
     for (AController* Controller : TActorRange<AController>(GetWorld()))
     {
         bool bIsWinner = Controller->IsPlayerController() == bIsPlayerWinner;
+        if (bIsWinner)
+        {
+            LevelTeleporterActor->EnableTeleporter();
+        }
         Controller->GameHasEnded(Controller->GetPawn(), bIsWinner);
     }
 }

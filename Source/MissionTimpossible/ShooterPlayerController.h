@@ -37,6 +37,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UUserWidget> HUDClass;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UUserWidget> InteractWidgetClass;
+
 	UPROPERTY(VisibleAnywhere)
 	UUserWidget* HUD;
 };

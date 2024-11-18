@@ -4,6 +4,7 @@
 #include "ShooterPlayerController.h"
 
 #include "Blueprint/UserWidget.h"
+#include "InteractWidget.h"
 
 void AShooterPlayerController::BeginPlay()
 {
@@ -39,14 +40,35 @@ void AShooterPlayerController::GameHasEnded(AActor *EndGameFocus, bool bIsWinner
     HUD->RemoveFromViewport();
     if (bIsWinner)
     {
-        UUserWidget* WinScreen = CreateWidget(this, WinScreenClass);
+        /*UUserWidget* WinScreen = CreateWidget(this, WinScreenClass);
         if (WinScreen != nullptr)
         {
             WinScreen->AddToViewport();
+        }*/
+        UE_LOG(LogTemp, Warning, TEXT("bIsWinner is true"));
+
+        UUserWidget* InteractWidget = CreateWidget<UUserWidget>(this, InteractWidgetClass);
+        if (InteractWidget)
+        {
+            UInteractWidget* SpecificInteractWidget = Cast<UInteractWidget>(InteractWidget);
+            if (SpecificInteractWidget)
+            {
+                SpecificInteractWidget->SetWidgetText("All enemies are dead, go to the teleporter!");
+                SpecificInteractWidget->AddToViewport();
+            }
+            else {
+                UE_LOG(LogTemp, Warning, TEXT("SpecificInteractWidget is null"));
+            }
         }
+        else {
+            UE_LOG(LogTemp, Warning, TEXT("InteractWidget is null"));
+        }
+
     }
     else
     {
+        UE_LOG(LogTemp, Warning, TEXT("bIsWinner is false"));
+
         UUserWidget* LoseScreen = CreateWidget(this, LoseScreenClass);
         if (LoseScreen != nullptr)
         {
