@@ -21,6 +21,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	bool HasMoved();
+	bool HasShot20Times();
+	bool HasReloaded();
+	bool IsQuestFinished();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -29,10 +34,6 @@ private:
 	TSoftObjectPtr<ALevelTeleporter> LevelTeleporterActor;
 	
 	void EnableTeleporterIfConditionMet();
-
-	bool HasShot20Times();
-
-	bool IsQuestFinished();
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> InteractWidgetClass;

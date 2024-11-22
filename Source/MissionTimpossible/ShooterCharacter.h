@@ -45,8 +45,26 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	AInteractableBase* NearbyInteractable;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Quest")
 	int32 BulletsShot;
+
+	UPROPERTY(VisibleAnywhere, Category = "Quest")
+	bool bHasReloaded;
+
+	UPROPERTY(VisibleAnywhere, Category = "Quest")
+	bool bHasMovedForward;
+
+	UPROPERTY(VisibleAnywhere, Category = "Quest")
+	bool bHasMovedLeft;
+
+	UPROPERTY(VisibleAnywhere, Category = "Quest")
+	bool bHasMovedBackward;
+
+	UPROPERTY(VisibleAnywhere, Category = "Quest")
+	bool bHasMovedRight;
+
+	UPROPERTY(VisibleAnywhere, Category = "Quest")
+	bool bHasJumped;
 
 private:
 	void MoveForward(float AxisValue);
@@ -54,6 +72,7 @@ private:
     void Interact();
 	void Reload();
 	void Pause();
+	void Jump();
 
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGun> GunClass;

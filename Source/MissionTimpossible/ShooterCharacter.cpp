@@ -48,7 +48,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent *PlayerInputCo
     PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &APawn::AddControllerPitchInput);
     PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AShooterCharacter::MoveRight);
     PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &APawn::AddControllerYawInput);
-    PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+    PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &AShooterCharacter::Jump);
     // ^ Arguments: binding in UE, target, function (pointer)
     // Lookup, LookRight, Jump lgsg pake parent function karena argsnya gadiapa"in lg
 
@@ -98,11 +98,27 @@ FText AShooterCharacter::GetAmmoText() const
 
 void AShooterCharacter::MoveForward(float AxisValue)
 {
+    if (AxisValue > 0)
+    {
+        bHasMovedForward = true;
+    }
+    else
+    {
+        bHasMovedBackward = true;
+    }
     AddMovementInput(GetActorForwardVector() * AxisValue);
 }
 
 void AShooterCharacter::MoveRight(float AxisValue)
 {
+    if (AxisValue > 0)
+    {
+        bHasMovedRight = true;
+    }
+    else
+    {
+        bHasMovedLeft = true;
+    }
     AddMovementInput(GetActorRightVector() * AxisValue);
 }
 
@@ -124,6 +140,7 @@ void AShooterCharacter::Interact()
 
 void AShooterCharacter::Reload()
 {
+    bHasReloaded = true;
     Gun->Reload();
 }
 
@@ -134,4 +151,10 @@ void AShooterCharacter::Pause()
     {
         PauseMenu->AddToViewport();
     }
+}
+
+void AShooterCharacter::Jump()
+{
+    bHasJumped = true;
+    ACharacter::Jump();
 }

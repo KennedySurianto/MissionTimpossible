@@ -56,11 +56,13 @@ void AShooterPlayerController::GameHasEnded(AActor *EndGameFocus, bool bIsWinner
                 SpecificInteractWidget->SetWidgetText("All enemies are dead, go to the teleporter!");
                 SpecificInteractWidget->AddToViewport();
             }
-            else {
+            else 
+            {
                 UE_LOG(LogTemp, Warning, TEXT("SpecificInteractWidget is null"));
             }
         }
-        else {
+        else 
+        {
             UE_LOG(LogTemp, Warning, TEXT("InteractWidget is null"));
         }
 

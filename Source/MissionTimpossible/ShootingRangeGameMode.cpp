@@ -28,7 +28,6 @@ void AShootingRangeGameMode::BeginPlay()
     ShowWidgetMessage("Talk to Asuna!", 3);
 }
 
-
 void AShootingRangeGameMode::EnableTeleporterIfConditionMet()
 {
     if (IsQuestFinished())
@@ -53,9 +52,24 @@ bool AShootingRangeGameMode::HasShot20Times()
     return false;
 }
 
+bool AShootingRangeGameMode::HasReloaded()
+{
+    if (AShooterCharacter* Character = Cast<AShooterCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+        return Character->bHasReloaded;
+
+    return false;
+}
+
+bool AShootingRangeGameMode::HasMoved()
+{
+    if (AShooterCharacter* Character = Cast<AShooterCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+        return Character->bHasMovedForward && Character->bHasMovedLeft && Character->bHasMovedBackward && Character->bHasMovedRight && Character->bHasJumped;
+    return false;
+}
+
 bool AShootingRangeGameMode::IsQuestFinished()
 {
-    return HasShot20Times();
+    return HasShot20Times() && HasMoved() && HasReloaded();
 }
 
 void AShootingRangeGameMode::ShowWidgetMessage(FString Text, float Duration)

@@ -1,94 +1,85 @@
 #include "MovingTarget.h"
 #include "Components/StaticMeshComponent.h"
-#include "Materials/MaterialInstanceDynamic.h"
-#include "TimerManager.h"
 #include "Engine/World.h"
-#include "Particles/ParticleSystem.h"
+#include "TimerManager.h"
+#include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/DamageType.h"
 
-
+// Sets default values
 AMovingTarget::AMovingTarget()
 {
-    PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = true;
 
-    // Set up the ball mesh
-    BallMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BallMesh"));
-    RootComponent = BallMesh;
+	// Set up the ball mesh
+	BallMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BallMesh"));
+	RootComponent = BallMesh;
 
-    // Enable collision
-    BallMesh->SetSimulatePhysics(false);
-    BallMesh->SetNotifyRigidBodyCollision(true);
+	// Enable collision
+	BallMesh->SetSimulatePhysics(false);
+	BallMesh->SetNotifyRigidBodyCollision(true);
+	BallMesh->SetGenerateOverlapEvents(true);
 
-    // Set initial movement variables
-    MoveSpeed = 300.0f;
-    MoveDirection = 1.0f;
+	// Set initial movement variables
+	MoveSpeed = 300.0f;
+	MoveDirection = 1.0f;
 
-    // Bind the hit event
-    BallMesh->OnComponentHit.AddDynamic(this, &AMovingTarget::OnHit);
+	// Set up the damage response
+	SetCanBeDamaged(true);
 }
 
 void AMovingTarget::BeginPlay()
 {
-    Super::BeginPlay();
-
-    // Set the starting position
-    StartLocation = GetActorLocation();
-    EndLocation = StartLocation + FVector(1000.0f, 0.0f, 0.0f);
-
-    // Create a dynamic material instance and set the initial color to cyan
-    if (BallMesh->GetMaterial(0))
-    {
-        DynamicMaterial = UMaterialInstanceDynamic::Create(BallMesh->GetMaterial(0), this);
-        if (DynamicMaterial)
-        {
-            FLinearColor Cyan(0.0f, 1.0f, 1.0f);
-            DynamicMaterial->SetVectorParameterValue("BaseColor", Cyan);
-            BallMesh->SetMaterial(0, DynamicMaterial);
-        }
-    }
+	Super::BeginPlay();
+	StartLocation = GetActorLocation();
+	EndLocation = StartLocation + Offset;
 }
 
 void AMovingTarget::Tick(float DeltaTime)
 {
-    Super::Tick(DeltaTime);
-    MoveBall(DeltaTime);
+	Super::Tick(DeltaTime);
+	MoveBall(DeltaTime);
 }
 
 void AMovingTarget::MoveBall(float DeltaTime)
 {
-    FVector CurrentLocation = GetActorLocation();
-    float Distance = (EndLocation - StartLocation).Size();
+	FVector CurrentLocation = GetActorLocation();
+	FVector Direction = (EndLocation - StartLocation).GetSafeNormal();
+	float Distance = (EndLocation - StartLocation).Size();
 
-    CurrentLocation += FVector(MoveDirection * MoveSpeed * DeltaTime, 0, 0);
+	// Update the current location
+	CurrentLocation += MoveDirection * Direction * MoveSpeed * DeltaTime;
 
-    if ((CurrentLocation - StartLocation).Size() >= Distance || (CurrentLocation - EndLocation).Size() >= Distance)
-    {
-        MoveDirection *= -1;
-    }
+	// Check if the actor has moved beyond StartLocation or EndLocation
+	if ((CurrentLocation - StartLocation).Size() > Distance || (CurrentLocation - EndLocation).Size() > Distance)
+	{
+		MoveDirection *= -1; // Reverse the direction
+	}
 
-    SetActorLocation(CurrentLocation);
+	SetActorLocation(CurrentLocation);
 }
 
-void AMovingTarget::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+float AMovingTarget::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-    if (DynamicMaterial)
-    {
-        // Change the color to red on hit
-        FLinearColor TestRedColor(1.0f, 0.0f, 0.0f); // Test red
-        DynamicMaterial->SetVectorParameterValue("BaseColor", TestRedColor);
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
-        // Set a timer to reset the color after 1 second
-        GetWorld()->GetTimerManager().SetTimer(ColorResetTimer, this, &AMovingTarget::ResetColor, 1.0f, false);
-    }
+	// Set the actor's scale to 0 when hit
+	SetActorScale3D(FVector(0.0f, 0.0f, 0.0f));
 
-}
+	// Use a timer to reset the scale after 3 seconds
+	if (GetWorld())
+	{
+		GetWorld()->GetTimerManager().SetTimer(
+			TimerHandle_ResetScale,
+			FTimerDelegate::CreateLambda([this]()
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Resetting scale to 1.0"));
+			SetActorScale3D(FVector(1.0f, 1.0f, 1.0f));
+		}),
+			1.0f,
+			false
+		);
+	}
 
-void AMovingTarget::ResetColor()
-{
-    if (DynamicMaterial)
-    {
-        // Reset color to cyan
-        FLinearColor Cyan(0.0f, 1.0f, 1.0f);
-        DynamicMaterial->SetVectorParameterValue("BaseColor", Cyan);
-    }
+	return DamageAmount;
 }

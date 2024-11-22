@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -10,8 +8,8 @@ UCLASS()
 class MISSIONTIMPOSSIBLE_API AMovingTarget : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AMovingTarget();
 
@@ -19,9 +17,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	// Override the TakeDamage function to handle damage
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 private:
 	// Static Mesh
@@ -29,24 +30,24 @@ private:
 	UStaticMeshComponent* BallMesh;
 
 	// Movement variables
+	UPROPERTY(VisibleAnywhere)
 	FVector StartLocation;
+
+	UPROPERTY(VisibleAnywhere)
 	FVector EndLocation;
+
+	UPROPERTY(EditAnywhere)
+	FVector Offset;
+
+	UPROPERTY(EditAnywhere)
 	float MoveSpeed;
+
+	UPROPERTY(VisibleAnywhere)
 	float MoveDirection;
 
-	// Dynamic Material Instance for color change
-	UMaterialInstanceDynamic* DynamicMaterial;
-
-	// Function to reset color
-	void ResetColor();
-
-	// Timer to revert color
-	FTimerHandle ColorResetTimer;
+	// Timer handle for resetting scale
+	FTimerHandle TimerHandle_ResetScale;
 
 	// Functions for movement
 	void MoveBall(float DeltaTime);
-
-	// Function to handle being hit
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

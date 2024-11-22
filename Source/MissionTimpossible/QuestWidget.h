@@ -18,8 +18,14 @@ public:
 	UFUNCTION()
 	void Back();
 
-	UFUNCTION(BlueprintCallable, Category = "UI")
+	UFUNCTION(BlueprintCallable)
 	FText GetBulletsShotText() const;
+
+	UFUNCTION(BlueprintCallable)
+	FText GetMoveStatusText() const;
+
+	UFUNCTION(BlueprintCallable)
+	FText GetReloadStatusText() const;
 
 protected:
 	UPROPERTY(meta = (BindWidget))
