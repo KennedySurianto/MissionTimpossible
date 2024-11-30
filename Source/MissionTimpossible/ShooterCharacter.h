@@ -66,6 +66,12 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Quest")
 	bool bHasJumped;
 
+	UPROPERTY(EditAnywhere)
+	float MaxHealth = 100;
+
+	UPROPERTY(VisibleAnywhere)
+	float Health;
+
 private:
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
@@ -80,11 +86,6 @@ private:
 	UPROPERTY()
 	AGun* Gun;
 
-	UPROPERTY(EditDefaultsOnly)
-	float MaxHealth = 100;
-
-	UPROPERTY(VisibleAnywhere)
-	float Health;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> PauseMenuClass;
