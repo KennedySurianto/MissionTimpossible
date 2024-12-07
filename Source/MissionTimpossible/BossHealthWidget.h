@@ -19,7 +19,7 @@ public:
 
 protected:
     /** Reference to the boss character being tracked */
-    UPROPERTY(BlueprintReadOnly, Category = "Boss Health", meta = (ExposeOnSpawn = true))
+    UPROPERTY(EditAnywhere)
     AShooterCharacter* BossCharacter;
 
     /** Updates the progress bar value */

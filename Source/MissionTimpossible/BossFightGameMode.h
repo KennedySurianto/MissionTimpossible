@@ -20,7 +20,7 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Boss", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere)
 	AShooterCharacter* BossInstance;
 
 	UPROPERTY(EditAnywhere)

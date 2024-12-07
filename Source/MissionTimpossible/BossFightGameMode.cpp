@@ -3,10 +3,26 @@
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/Actor.h" // For AActor
 #include "GameFramework/PlayerController.h" // For PlayerController
+#include "EngineUtils.h"
 
 void ABossFightGameMode::BeginPlay()
 {
     Super::BeginPlay();
+
+    BossInstance = nullptr;
+
+    for (TActorIterator<AShooterCharacter> It(GetWorld()); It; ++It)
+    {
+        AShooterCharacter* Boss = *It;
+        UE_LOG(LogTemp, Log, TEXT("Iterating: %s"), *Boss->GetName());
+        if (Boss && Boss->GetName().Contains("BP_ShooterCharacter_C_3"))
+        {
+            UE_LOG(LogTemp, Log, TEXT("Found Boss with label: %s"), *Boss->GetName());
+            BossInstance = Boss;
+            break;
+        }
+    }
+
 
     if (BossHealthWidgetClass && BossInstance)
     {
